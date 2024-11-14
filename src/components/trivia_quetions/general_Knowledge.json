@@ -1,0 +1,13 @@
+[
+    { "question": "What is the capital of France?", "options": ["Paris", "Berlin", "Madrid", "Rome"], "correctAnswer": "Paris" },
+    { "question": "What is the largest ocean on Earth?", "options": ["Atlantic", "Indian", "Arctic", "Pacific"], "correctAnswer": "Pacific" },
+    { "question": "Who wrote 'To Kill a Mockingbird'?", "options": ["Harper Lee", "J.K. Rowling", "Mark Twain", "Ernest Hemingway"], "correctAnswer": "Harper Lee" },
+    { "question": "What is the currency of Japan?", "options": ["Yuan", "Dollar", "Yen", "Won"], "correctAnswer": "Yen" },
+    { "question": "How many continents are there?", "options": ["5", "6", "7", "8"], "correctAnswer": "7" },
+    { "question": "Which country is known as the Land of the Rising Sun?", "options": ["China", "Japan", "Thailand", "South Korea"], "correctAnswer": "Japan" },
+    { "question": "Who invented the telephone?", "options": ["Thomas Edison", "Alexander Graham Bell", "Nikola Tesla", "Isaac Newton"], "correctAnswer": "Alexander Graham Bell" },
+    { "question": "Which planet is known as the Red Planet?", "options": ["Mars", "Venus", "Jupiter", "Saturn"], "correctAnswer": "Mars" },
+    { "question": "What is the boiling point of water?", "options": ["90°C", "100°C", "110°C", "120°C"], "correctAnswer": "100°C" },
+    { "question": "Who painted the Mona Lisa?", "options": ["Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh", "Claude Monet"], "correctAnswer": "Leonardo da Vinci" }
+  ]
+  

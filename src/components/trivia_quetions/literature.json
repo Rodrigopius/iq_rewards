@@ -1,0 +1,13 @@
+[
+    { "question": "Who wrote 'Pride and Prejudice'?", "options": ["Jane Austen", "Emily Brontë", "George Eliot", "Virginia Woolf"], "correctAnswer": "Jane Austen" },
+    { "question": "In which year was '1984' published?", "options": ["1948", "1949", "1950", "1951"], "correctAnswer": "1949" },
+    { "question": "Who wrote 'The Great Gatsby'?", "options": ["Ernest Hemingway", "F. Scott Fitzgerald", "Mark Twain", "John Steinbeck"], "correctAnswer": "F. Scott Fitzgerald" },
+    { "question": "Which novel features the character Holden Caulfield?", "options": ["To Kill a Mockingbird", "The Catcher in the Rye", "Moby Dick", "The Old Man and the Sea"], "correctAnswer": "The Catcher in the Rye" },
+    { "question": "What is the longest Shakespeare play?", "options": ["Hamlet", "Othello", "Macbeth", "King Lear"], "correctAnswer": "Hamlet" },
+    { "question": "Who wrote 'The Lord of the Rings'?", "options": ["J.K. Rowling", "J.R.R. Tolkien", "C.S. Lewis", "George R.R. Martin"], "correctAnswer": "J.R.R. Tolkien" },
+    { "question": "Which author created Sherlock Holmes?", "options": ["Agatha Christie", "Arthur Conan Doyle", "Edgar Allan Poe", "Jules Verne"], "correctAnswer": "Arthur Conan Doyle" },
+    { "question": "Who wrote 'Frankenstein'?", "options": ["Mary Shelley", "Bram Stoker", "Robert Louis Stevenson", "Oscar Wilde"], "correctAnswer": "Mary Shelley" },
+    { "question": "What is the fictional country in 'The Chronicles of Narnia'?", "options": ["Middle-earth", "Hogwarts", "Narnia", "Wonderland"], "correctAnswer": "Narnia" },
+    { "question": "Who wrote 'Moby-Dick'?", "options": ["Herman Melville", "Jack London", "Nathaniel Hawthorne", "Joseph Conrad"], "correctAnswer": "Herman Melville" }
+  ]
+  

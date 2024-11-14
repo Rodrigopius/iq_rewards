@@ -1,0 +1,13 @@
+[
+    { "question": "What is the largest country by land area?", "options": ["USA", "Russia", "Canada", "China"], "correctAnswer": "Russia" },
+    { "question": "Which country has the most islands?", "options": ["Indonesia", "Sweden", "Philippines", "Canada"], "correctAnswer": "Sweden" },
+    { "question": "What is the capital of Australia?", "options": ["Sydney", "Melbourne", "Canberra", "Perth"], "correctAnswer": "Canberra" },
+    { "question": "In which continent is the Sahara Desert?", "options": ["Asia", "Africa", "Australia", "South America"], "correctAnswer": "Africa" },
+    { "question": "What is the smallest country in the world?", "options": ["Monaco", "Vatican City", "San Marino", "Liechtenstein"], "correctAnswer": "Vatican City" },
+    { "question": "Which river is the longest in the world?", "options": ["Amazon", "Nile", "Yangtze", "Mississippi"], "correctAnswer": "Nile" },
+    { "question": "What is the capital of Canada?", "options": ["Toronto", "Vancouver", "Montreal", "Ottawa"], "correctAnswer": "Ottawa" },
+    { "question": "Which country has the highest population?", "options": ["India", "China", "USA", "Indonesia"], "correctAnswer": "China" },
+    { "question": "Which is the largest US state by area?", "options": ["Texas", "California", "Alaska", "Montana"], "correctAnswer": "Alaska" },
+    { "question": "Which city is known as the Big Apple?", "options": ["Los Angeles", "Chicago", "New York", "San Francisco"], "correctAnswer": "New York" }
+  ]
+  

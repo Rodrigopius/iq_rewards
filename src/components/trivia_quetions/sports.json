@@ -1,0 +1,13 @@
+[
+    { "question": "Which country won the 2018 FIFA World Cup?", "options": ["Brazil", "Germany", "France", "Argentina"], "correctAnswer": "France" },
+    { "question": "How many players are on a soccer team?", "options": ["10", "11", "12", "13"], "correctAnswer": "11" },
+    { "question": "Who has won the most NBA championships?", "options": ["Chicago Bulls", "Boston Celtics", "Los Angeles Lakers", "Golden State Warriors"], "correctAnswer": "Boston Celtics" },
+    { "question": "Who holds the record for most home runs in MLB?", "options": ["Barry Bonds", "Babe Ruth", "Hank Aaron", "Willie Mays"], "correctAnswer": "Barry Bonds" },
+    { "question": "In which sport would you perform a slam dunk?", "options": ["Tennis", "Basketball", "Football", "Baseball"], "correctAnswer": "Basketball" },
+    { "question": "What is the maximum score in 10-pin bowling?", "options": ["250", "270", "290", "300"], "correctAnswer": "300" },
+    { "question": "Who won the most Olympic gold medals?", "options": ["Usain Bolt", "Michael Phelps", "Carl Lewis", "Mark Spitz"], "correctAnswer": "Michael Phelps" },
+    { "question": "Which country invented cricket?", "options": ["Australia", "India", "England", "South Africa"], "correctAnswer": "England" },
+    { "question": "In which sport would you find the term 'eagle'?", "options": ["Tennis", "Golf", "Soccer", "Basketball"], "correctAnswer": "Golf" },
+    { "question": "Which team won the Super Bowl in 2020?", "options": ["Kansas City Chiefs", "San Francisco 49ers", "Green Bay Packers", "New England Patriots"], "correctAnswer": "Kansas City Chiefs" }
+  ]
+  

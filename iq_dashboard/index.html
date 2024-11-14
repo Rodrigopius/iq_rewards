@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <!-- Include Tailwind CSS -->
+  <link href="output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans">
+
+  <!-- Dashboard Container -->
+  <div class="container mx-auto p-4">
+    <!-- Header -->
+    <header class="mb-6">
+      <h1 class="text-3xl font-bold text-center">User Dashboard</h1>
+      <a href="deposits.html" class="inline-block px-4 py-2 mt-4 rounded-lg bg-yellow-500 text-gray-900 font-semibold hover:bg-yellow-600 transition duration-200">
+        View Deposits
+      </a>
+      
+    </header>
+
+    <!-- Summary Cards -->
+    <div class="flex flex-wrap justify-between mb-6">
+      <div class="bg-gray-800 p-4 rounded-lg w-full md:w-1/2 lg:w-1/4 mb-4 md:mb-0">
+        <p class="text-gray-400">Total Users</p>
+        <h2 id="total-users" class="text-2xl font-semibold">0</h2>
+      </div>
+      <div class="bg-gray-800 p-4 rounded-lg w-full md:w-1/2 lg:w-1/4">
+        <p class="text-gray-400">Total Revenue</p>
+        <h2 id="total-revenue" class="text-2xl font-semibold">$0</h2>
+      </div>
+    </div>
+
+    <!-- Search Input -->
+    <div class="relative mb-6">
+      <input type="text" id="search" placeholder="Search users or transaction IDs..." class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+    </div>
+
+    <!-- User Cards Grid -->
+    <div id="user-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- User cards will be inserted here dynamically -->
+    </div>
+  </div>
+
+  <!-- Firebase and JavaScript -->
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
+    import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDRq09oR3CdXX4gl2VwOUS0EBGZomxNM8Q",
+        authDomain: "iq-reward.firebaseapp.com",
+        projectId: "iq-reward",
+        storageBucket: "iq-reward.firebasestorage.app",
+        messagingSenderId: "1015394460046",
+        appId: "1:1015394460046:web:0c19c5ac86000674e9c4df",
+        measurementId: "G-7QKVL2WFN0"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let usersList = [];  // Store users and transactions data for search filtering
+
+    // Fetch users and transactions and display on the dashboard
+    const fetchUsers = async () => {
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+      usersList = await Promise.all(usersSnapshot.docs.map(async userDoc => {
+        const userData = { id: userDoc.id, ...userDoc.data() };
+        userData.transactions = await fetchTransactions(userDoc.id);
+        return userData;
+      }));
+
+      // Update total users and total revenue
+      document.getElementById('total-users').textContent = usersList.length;
+      const totalRevenue = usersList.reduce((acc, user) => acc + (user.score || 0), 0);
+      document.getElementById('total-revenue').textContent = `$${totalRevenue.toFixed(2)}`;
+
+      // Display users with transactions
+      displayUsers(usersList);
+    };
+
+    // Display users and transactions
+    const displayUsers = (users) => {
+      const userCards = document.getElementById('user-cards');
+      userCards.innerHTML = '';  // Clear any existing user cards
+
+      users.forEach(user => displayUserCard(user));
+    };
+
+    // Display a single user's card with transactions
+    const displayUserCard = (user) => {
+      const userCard = document.createElement('div');
+      userCard.classList.add('bg-gray-800', 'p-4', 'rounded-lg', 'text-center');
+      userCard.setAttribute('data-username', user.username.toLowerCase()); // For search filtering
+
+      userCard.innerHTML = `
+        <h3 class="text-xl font-semibold">${user.username}</h3>
+        <p class="text-gray-400">Status: <span id="status-${user.id}">${user.status}</span></p>
+        <p class="text-gray-400">Balance: $${user.score || 0}</p>
+        <button id="verify-btn-${user.id}" class="bg-yellow-500 text-gray-900 px-4 py-2 mt-2 rounded-lg">${user.status === 'verified' ? 'Deactivate' : 'Verify'}</button>
+        <div id="transactions-${user.id}" class="mt-4"></div>
+      `;
+
+      // Add verify button click event
+      userCard.querySelector(`#verify-btn-${user.id}`).addEventListener('click', () => toggleUserStatus(user));
+
+      // Display user's transactions
+      const transactionsDiv = userCard.querySelector(`#transactions-${user.id}`);
+      user.transactions.forEach(transaction => {
+        const transactionDiv = document.createElement('div');
+        transactionDiv.classList.add('bg-gray-700', 'p-2', 'rounded-lg', 'mt-2');
+        transactionDiv.setAttribute('data-transaction-id', transaction.transactionId.toLowerCase()); // For search filtering
+
+        transactionDiv.innerHTML = `
+          <p class="text-gray-400">Transaction ID: ${transaction.transactionId}</p>
+          <p class="text-gray-400">Amount: $${transaction.withdrawAmount}</p>
+          <p class="text-gray-400">Status: <span id="transaction-status-${transaction.id}">${transaction.status}</span></p>
+        `;
+
+        if (transaction.status === 'pending') {
+          const completeBtn = document.createElement('button');
+          completeBtn.textContent = 'Complete';
+          completeBtn.classList.add('bg-green-500', 'text-gray-900', 'px-2', 'py-1', 'mt-2', 'rounded-lg');
+          completeBtn.addEventListener('click', () => completeTransaction(transaction.id));
+          transactionDiv.appendChild(completeBtn);
+        }
+
+        transactionsDiv.appendChild(transactionDiv);
+      });
+
+      document.getElementById('user-cards').appendChild(userCard);
+    };
+
+    // Toggle user status
+    const toggleUserStatus = async (user) => {
+      const newStatus = user.status === 'verified' ? 'deactivated' : 'verified';
+      await updateDoc(doc(db, 'users', user.id), { status: newStatus });
+      document.getElementById(`status-${user.id}`).textContent = newStatus;
+      document.getElementById(`verify-btn-${user.id}`).textContent = newStatus === 'verified' ? 'Deactivate' : 'Verify';
+    };
+
+    // Fetch transactions for a user
+    const fetchTransactions = async (userId) => {
+      const withdrawalsQuery = query(collection(db, 'withdrawals'), where('userId', '==', userId));
+      const withdrawalsSnapshot = await getDocs(withdrawalsQuery);
+      return withdrawalsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    };
+
+    // Complete transaction
+    const completeTransaction = async (transactionId) => {
+      await updateDoc(doc(db, 'withdrawals', transactionId), { status: 'completed' });
+      document.getElementById(`transaction-status-${transactionId}`).textContent = 'completed';
+    };
+
+    // Search functionality for usernames and transaction IDs
+    document.getElementById('search').addEventListener('input', (event) => {
+      const searchQuery = event.target.value.toLowerCase();
+      const userCards = document.getElementById('user-cards').children;
+
+      Array.from(userCards).forEach(card => {
+        const usernameMatch = card.getAttribute('data-username').includes(searchQuery);
+        const transactionMatch = Array.from(card.querySelectorAll('[data-transaction-id]')).some(trans => 
+          trans.getAttribute('data-transaction-id').includes(searchQuery)
+        );
+        card.style.display = usernameMatch || transactionMatch ? 'block' : 'none';
+      });
+    });
+
+    // Fetch users and transactions on page load
+    window.onload = fetchUsers;
+  </script>
+</body>
+</html>

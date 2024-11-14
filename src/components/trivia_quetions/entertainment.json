@@ -1,0 +1,13 @@
+[
+    { "question": "Who played Jack in Titanic?", "options": ["Tom Hanks", "Brad Pitt", "Leonardo DiCaprio", "Johnny Depp"], "correctAnswer": "Leonardo DiCaprio" },
+    { "question": "Which movie features the character Darth Vader?", "options": ["Star Wars", "Harry Potter", "The Matrix", "The Lord of the Rings"], "correctAnswer": "Star Wars" },
+    { "question": "Who is the author of Harry Potter?", "options": ["J.K. Rowling", "George R.R. Martin", "J.R.R. Tolkien", "Stephen King"], "correctAnswer": "J.K. Rowling" },
+    { "question": "What is the longest-running TV show?", "options": ["The Simpsons", "Friends", "Seinfeld", "M*A*S*H"], "correctAnswer": "The Simpsons" },
+    { "question": "Which artist is known as the King of Pop?", "options": ["Elvis Presley", "Michael Jackson", "Prince", "Madonna"], "correctAnswer": "Michael Jackson" },
+    { "question": "What year was the first Harry Potter book published?", "options": ["1995", "1997", "2000", "2002"], "correctAnswer": "1997" },
+    { "question": "Which superhero is known as the Man of Steel?", "options": ["Batman", "Superman", "Iron Man", "Spider-Man"], "correctAnswer": "Superman" },
+    { "question": "Who starred in the movie 'Jaws'?", "options": ["Richard Dreyfuss", "Tom Hanks", "Robert De Niro", "Al Pacino"], "correctAnswer": "Richard Dreyfuss" },
+    { "question": "What is the name of the fictional African country in Black Panther?", "options": ["Genosha", "Latveria", "Wakanda", "Madripoor"], "correctAnswer": "Wakanda" },
+    { "question": "What is the highest-grossing movie of all time?", "options": ["Avatar", "Titanic", "Avengers: Endgame", "Star Wars: The Force Awakens"], "correctAnswer": "Avatar" }
+  ]
+  

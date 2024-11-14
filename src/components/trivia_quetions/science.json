@@ -1,0 +1,13 @@
+[
+    { "question": "What is the chemical symbol for water?", "options": ["H2O", "O2", "CO2", "NaCl"], "correctAnswer": "H2O" },
+    { "question": "What is the powerhouse of the cell?", "options": ["Nucleus", "Mitochondria", "Ribosome", "Golgi apparatus"], "correctAnswer": "Mitochondria" },
+    { "question": "What planet is closest to the Sun?", "options": ["Venus", "Mercury", "Earth", "Mars"], "correctAnswer": "Mercury" },
+    { "question": "Which element has the atomic number 1?", "options": ["Oxygen", "Hydrogen", "Carbon", "Nitrogen"], "correctAnswer": "Hydrogen" },
+    { "question": "What gas do plants absorb from the atmosphere?", "options": ["Oxygen", "Nitrogen", "Carbon dioxide", "Helium"], "correctAnswer": "Carbon dioxide" },
+    { "question": "How many bones are in the human body?", "options": ["206", "210", "180", "190"], "correctAnswer": "206" },
+    { "question": "What is the largest mammal?", "options": ["Elephant", "Blue Whale", "Giraffe", "Great White Shark"], "correctAnswer": "Blue Whale" },
+    { "question": "Which planet has rings?", "options": ["Earth", "Mars", "Saturn", "Jupiter"], "correctAnswer": "Saturn" },
+    { "question": "What is the hardest natural substance?", "options": ["Gold", "Iron", "Diamond", "Graphite"], "correctAnswer": "Diamond" },
+    { "question": "How many chambers does the human heart have?", "options": ["2", "4", "3", "5"], "correctAnswer": "4" }
+  ]
+  

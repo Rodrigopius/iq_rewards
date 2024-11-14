@@ -1,0 +1,13 @@
+[
+    { "question": "Which country is known for its baguettes?", "options": ["Italy", "Spain", "France", "Germany"], "correctAnswer": "France" },
+    { "question": "What is the main ingredient in guacamole?", "options": ["Tomato", "Avocado", "Cucumber", "Pepper"], "correctAnswer": "Avocado" },
+    { "question": "Sushi is a traditional food from which country?", "options": ["China", "Thailand", "Japan", "Vietnam"], "correctAnswer": "Japan" },
+    { "question": "What ingredient makes bread rise?", "options": ["Salt", "Yeast", "Sugar", "Water"], "correctAnswer": "Yeast" },
+    { "question": "What is the main ingredient in hummus?", "options": ["Lentils", "Chickpeas", "Beans", "Peas"], "correctAnswer": "Chickpeas" },
+    { "question": "Which fruit is used to make wine?", "options": ["Apple", "Orange", "Grape", "Berry"], "correctAnswer": "Grape" },
+    { "question": "What is the most expensive spice by weight?", "options": ["Cinnamon", "Saffron", "Nutmeg", "Vanilla"], "correctAnswer": "Saffron" },
+    { "question": "Which country is known for tapas?", "options": ["France", "Spain", "Italy", "Portugal"], "correctAnswer": "Spain" },
+    { "question": "What is the main ingredient in a Caesar salad?", "options": ["Romaine lettuce", "Iceberg lettuce", "Spinach", "Arugula"], "correctAnswer": "Romaine lettuce" },
+    { "question": "What type of food is Brie?", "options": ["Bread", "Cheese", "Fruit", "Vegetable"], "correctAnswer": "Cheese" }
+  ]
+  
