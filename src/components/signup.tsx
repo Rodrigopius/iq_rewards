@@ -16,7 +16,8 @@ const loaderStyle: React.CSSProperties = {
   aspectRatio: '1',
   borderRadius: '50%',
   background: '#514b82',
-  WebkitMask: 'repeating-conic-gradient(#0000 0deg, #000 1deg 70deg, #0000 71deg 90deg), radial-gradient(farthest-side, #0000 calc(100% - 8px - 1px), #000 calc(100% - 8px))',
+  WebkitMask:
+    'repeating-conic-gradient(#0000 0deg, #000 1deg 70deg, #0000 71deg 90deg), radial-gradient(farthest-side, #0000 calc(100% - 8px - 1px), #000 calc(100% - 8px))',
   WebkitMaskComposite: 'destination-in',
   maskComposite: 'intersect',
   animation: 'rotate 1s infinite linear',
@@ -28,7 +29,7 @@ const styles = `
   }
 `;
 
-const styleSheet = document.createElement("style");
+const styleSheet = document.createElement('style');
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
@@ -69,6 +70,29 @@ const Signup: React.FC = () => {
     }));
   };
 
+  // Reusable function to initialize a new user
+  const initializeNewUser = async (userId: string, username: string, email: string, referrerId: string | null) => {
+    await setDoc(doc(db, 'users', userId), {
+      username,
+      email,
+      createdAt: new Date(),
+      score: 1000, // Welcome bonus
+      referredBy: referrerId || null,
+      status: 'unverified',
+    });
+
+    if (referrerId) {
+      const referrerDoc = doc(db, 'users', referrerId);
+      await setDoc(
+        referrerDoc,
+        {
+          referredFriends: arrayUnion(username),
+        },
+        { merge: true }
+      );
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { email, password, username, verifyPwd, referrerId } = formData;
@@ -99,21 +123,7 @@ const Signup: React.FC = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      await setDoc(doc(db, 'users', user.uid), {
-        username,
-        email,
-        createdAt: new Date(),
-        score: 1000,
-        referredBy: referrerId || null,
-        status: 'unverified',
-      });
-
-      if (referrerId) {
-        const referrerDoc = doc(db, 'users', referrerId);
-        await setDoc(referrerDoc, {
-          referredFriends: arrayUnion(username),
-        }, { merge: true });
-      }
+      await initializeNewUser(user.uid, username, email, referrerId);
 
       Swal.fire({
         icon: 'success',
@@ -146,14 +156,7 @@ const Signup: React.FC = () => {
 
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       if (!userDoc.exists()) {
-        await setDoc(doc(db, 'users', user.uid), {
-          username: user.displayName || 'NewUser',
-          email: user.email,
-          createdAt: new Date(),
-          score: 1000,
-          referredBy: formData.referrerId || null,
-          status: 'unverified',
-        });
+        await initializeNewUser(user.uid, user.displayName || 'NewUser', user.email || '', formData.referrerId);
       }
 
       Swal.fire({
@@ -176,91 +179,99 @@ const Signup: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-900 via-blue-800 to-blue-600">
-    <div className="w-full max-w-md p-6">
-      <img src={Logo} alt="RewardIQ Logo" className="h-20 object-contain" style={{ width: '300px' }} />
-      <div className="text-center mb-8">
-        <p className="text-white/80 text-sm">Create An Account</p>
-      </div>
+      <div className="w-full max-w-md p-6">
+        <img src={Logo} alt="RewardIQ Logo" className="h-20 object-contain" style={{ width: '300px' }} />
+        <div className="text-center mb-8">
+          <p className="text-white/80 text-sm">Create An Account</p>
+        </div>
 
-      <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-xl">
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-6">
-            <div className="relative">
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                className="w-full h-12 text-white bg-white/10 backdrop-blur rounded-lg pl-4 pr-10 
+        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-xl">
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-6">
+              <div className="relative">
+                <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="w-full h-12 text-white bg-white/10 backdrop-blur rounded-lg pl-4 pr-10 
                              border border-white/20 focus:border-white focus:ring-2 focus:ring-white/30 
                              placeholder-white/60"
-                placeholder="Username"
-                required
-              />
-            </div>
-            <div className="relative">
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full h-12 text-white bg-white/10 backdrop-blur rounded-lg pl-4 pr-10 
+                  placeholder="Username"
+                  required
+                />
+              </div>
+              <div className="relative">
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full h-12 text-white bg-white/10 backdrop-blur rounded-lg pl-4 pr-10 
                              border border-white/20 focus:border-white focus:ring-2 focus:ring-white/30 
                              placeholder-white/60"
-                placeholder="Email"
-                required
-              />
-            </div>
-            <div className="relative">
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full h-12 text-white bg-white/10 backdrop-blur rounded-lg pl-4 pr-10 
+                  placeholder="Email"
+                  required
+                />
+              </div>
+              <div className="relative">
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full h-12 text-white bg-white/10 backdrop-blur rounded-lg pl-4 pr-10 
                              border border-white/20 focus:border-white focus:ring-2 focus:ring-white/30 
                              placeholder-white/60"
-                placeholder="Password"
-                required
-              />
-            </div>
-            <div className="relative">
-              <input
-                type="password"
-                name="verifyPwd"
-                value={formData.verifyPwd}
-                onChange={handleChange}
-                className="w-full h-12 text-white bg-white/10 backdrop-blur rounded-lg pl-4 pr-10 
+                  placeholder="Password"
+                  required
+                />
+              </div>
+              <div className="relative">
+                <input
+                  type="password"
+                  name="verifyPwd"
+                  value={formData.verifyPwd}
+                  onChange={handleChange}
+                  className="w-full h-12 text-white bg-white/10 backdrop-blur rounded-lg pl-4 pr-10 
                              border border-white/20 focus:border-white focus:ring-2 focus:ring-white/30 
                              placeholder-white/60"
-                placeholder="Verify Password"
-                required
-              />
-            </div>
-            <div className="relative">
-              <input
-                type="text"
-                name="referrerId"
-                value={formData.referrerId}
-                readOnly // Make the input read-only
-                className="w-full h-12 text-gray-400 bg-white/10 backdrop-blur rounded-lg pl-4 pr-10 
+                  placeholder="Verify Password"
+                  required
+                />
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="referrerId"
+                  value={formData.referrerId}
+                  readOnly
+                  className="w-full h-12 text-gray-400 bg-white/10 backdrop-blur rounded-lg pl-4 pr-10 
                              border border-white/20 placeholder-white/60"
-                placeholder="Referrer ID"
-              />
-            </div>
+                  placeholder="Referrer ID"
+                />
+              </div>
               <button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg font-medium">
                 {loading ? <Spinner /> : 'Sign Up'}
               </button>
 
-              <button type="button" onClick={handleGoogleSignIn} className="w-full h-12 bg-white text-blue-700 rounded-lg font-medium flex items-center justify-center hover:bg-gray-100">
-                {loading ? <Spinner /> : 'Sign up with Google'}
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                className="w-full h-12 flex items-center justify-center bg-white text-blue-700 rounded-lg font-medium"
+              >
+                {loading ? <Spinner /> : 'Sign Up with Google'}
               </button>
-
-              <div className="text-center text-white text-sm">
-                Have An Account? <Link to="/login">Login</Link>
-              </div>
             </div>
           </form>
+          <div className="text-center mt-6">
+            <p className="text-white/60">
+              Already have an account?{' '}
+              <Link to="/login" className="text-white font-medium">
+                Log In
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

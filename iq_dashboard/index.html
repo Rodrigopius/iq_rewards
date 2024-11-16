@@ -17,7 +17,6 @@
       <a href="deposits.html" class="inline-block px-4 py-2 mt-4 rounded-lg bg-yellow-500 text-gray-900 font-semibold hover:bg-yellow-600 transition duration-200">
         View Deposits
       </a>
-      
     </header>
 
     <!-- Summary Cards -->
@@ -64,9 +63,20 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    let usersList = [];  // Store users and transactions data for search filtering
+    let usersList = []; // Store users and transactions data for search filtering
 
-    // Fetch users and transactions and display on the dashboard
+    // Function to update total users and total revenue
+    const updateDashboard = (usersList) => {
+      const totalUsers = usersList.length;
+
+      // Ensure score is treated as a number and defaults to 0
+      const totalRevenue = usersList.reduce((acc, user) => acc + (Number(user.score) || 0), 0);
+
+      document.getElementById('total-users').textContent = totalUsers;
+      document.getElementById('total-revenue').textContent = `$${totalRevenue.toFixed(2)}`;
+    };
+
+    // Fetch users and transactions
     const fetchUsers = async () => {
       const usersSnapshot = await getDocs(collection(db, 'users'));
       usersList = await Promise.all(usersSnapshot.docs.map(async userDoc => {
@@ -75,13 +85,18 @@
         return userData;
       }));
 
-      // Update total users and total revenue
-      document.getElementById('total-users').textContent = usersList.length;
-      const totalRevenue = usersList.reduce((acc, user) => acc + (user.score || 0), 0);
-      document.getElementById('total-revenue').textContent = `$${totalRevenue.toFixed(2)}`;
+      // Update totals using updateDashboard
+      updateDashboard(usersList);
 
       // Display users with transactions
       displayUsers(usersList);
+    };
+
+    // Fetch transactions for a user
+    const fetchTransactions = async (userId) => {
+      const withdrawalsQuery = query(collection(db, 'withdrawals'), where('userId', '==', userId));
+      const withdrawalsSnapshot = await getDocs(withdrawalsQuery);
+      return withdrawalsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     };
 
     // Display users and transactions
@@ -142,13 +157,6 @@
       await updateDoc(doc(db, 'users', user.id), { status: newStatus });
       document.getElementById(`status-${user.id}`).textContent = newStatus;
       document.getElementById(`verify-btn-${user.id}`).textContent = newStatus === 'verified' ? 'Deactivate' : 'Verify';
-    };
-
-    // Fetch transactions for a user
-    const fetchTransactions = async (userId) => {
-      const withdrawalsQuery = query(collection(db, 'withdrawals'), where('userId', '==', userId));
-      const withdrawalsSnapshot = await getDocs(withdrawalsQuery);
-      return withdrawalsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     };
 
     // Complete transaction
