@@ -35,7 +35,7 @@ const Deposit: React.FC = () => {
       await updateDoc(userDoc, {
         deposit: {
           transactionId,
-          amount: 10000,
+          amount: 2500,
           date: serverTimestamp(),
         },
       });
@@ -56,7 +56,7 @@ const Deposit: React.FC = () => {
       <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md mx-auto mt-10 border border-gray-700">
         <h2 className="text-2xl font-bold mb-4 text-center text-white">Deposit via Mobile Money</h2>
         <p className="text-center text-gray-400 mb-6 text-sm">
-          Deposit money to one of our following merchant numbers and use your account name as the reference.
+          Deposit UGX 2500 Activation fee to one of our following merchant numbers and use your account name as the reference.
           We will process your transfer immediately, and it should be completed within 30 minutes.
         </p>
 

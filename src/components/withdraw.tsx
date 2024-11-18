@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { doc, setDoc, updateDoc, serverTimestamp, getDoc, collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import Swal from 'sweetalert2';  // Import SweetAlert
-import Spinner from './spinner';  // Import the Spinner component
+import Swal from 'sweetalert2'; // Import SweetAlert
+import Spinner from './spinner'; // Import the Spinner component
 import TopNav from './topNav';
 import BottomNav from './bottomNav';
 import SocialBar from './adunits/socialBar';
+
 // Function to generate a random transaction ID
 const generateTransactionId = () => {
   return 'TXN' + Math.floor(Math.random() * 10000000000).toString().padStart(10, '0');
@@ -18,7 +19,7 @@ const Withdraw: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [balance, setBalance] = useState<number | null>(null);
   const [error, setError] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);  // Loading state for the submit button
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const auth = getAuth();
@@ -53,17 +54,18 @@ const Withdraw: React.FC = () => {
       return;
     }
 
-    if (parseFloat(withdrawAmount) < 12000) {
-      setError('Minimum withdrawal amount is 12,000.');
+    const amount = parseFloat(withdrawAmount);
+    if (amount < 5000) {
+      setError('Minimum withdrawal amount is 5,000.');
       return;
     }
 
-    if (parseFloat(withdrawAmount) > 200000) {
+    if (amount > 200000) {
       setError('Maximum withdrawal amount is 200,000.');
       return;
     }
 
-    if (balance === null || balance < parseFloat(withdrawAmount)) {
+    if (balance === null || balance < amount) {
       setError('Insufficient balance.');
       return;
     }
@@ -86,17 +88,31 @@ const Withdraw: React.FC = () => {
       return;
     }
 
+    const fee = amount * 0.05; // 5% fee
+    const netAmount = amount - fee; // Amount after deducting the fee
+
+    // Confirm with SweetAlert before proceeding
+    const confirmation = await Swal.fire({
+      title: 'Confirm Withdrawal',
+      html: `Amount entered: UGX ${amount.toLocaleString()}<br>Withdrawal fee: UGX ${fee.toLocaleString()}<br><strong>Net amount: UGX ${netAmount.toLocaleString()}</strong>`,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Proceed',
+      cancelButtonText: 'Cancel',
+    });
+
+    if (!confirmation.isConfirmed) return;
+
     const transactionId = generateTransactionId(); // Generate a unique transaction ID
     const withdrawalData = {
       transactionId,
       withdrawNumber,
-      withdrawAmount: parseFloat(withdrawAmount),
+      withdrawAmount: netAmount, // Save net amount in the database
       status: 'pending',
       timestamp: serverTimestamp(),
       userId: user.uid,
     };
 
-    // Start loading state
     setLoading(true);
 
     try {
@@ -105,93 +121,92 @@ const Withdraw: React.FC = () => {
 
       // Update user's balance (score) after withdrawal
       await updateDoc(userDocRef, {
-        score: balance - parseFloat(withdrawAmount),
+        score: balance - amount, // Deduct the full amount from the user's balance
       });
 
       // Success message
-      Swal.fire('Success', 'Withdrawal request has been submitted. Your transaction is pending.', 'success');
+      Swal.fire('Success', `You will receive UGX ${netAmount.toLocaleString()} after fees.`, 'success');
       setWithdrawNumber('');
       setWithdrawAmount('');
     } catch (error) {
       console.error('Error processing withdrawal:', error);
       Swal.fire('Error', 'Failed to process the withdrawal request. Please try again later.', 'error');
     } finally {
-      // End loading state
       setLoading(false);
     }
   };
 
   return (
     <>
-    <TopNav/>
-    <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md mx-auto mt-10 border border-gray-700">
-      <h2 className="text-2xl font-bold mb-4 text-center text-white">Withdraw Funds</h2>
-      <p className="text-center text-gray-400 mb-6 text-sm">
-        Enter your withdrawal number and the amount you want to withdraw. The minimum withdrawal amount is 12,000, and the maximum is 200,000.
-      </p>
+      <TopNav />
+      <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md mx-auto mt-10 border border-gray-700">
+        <h2 className="text-2xl font-bold mb-4 text-center text-white">Withdraw Funds</h2>
+        <p className="text-center text-gray-400 mb-6 text-sm">
+          Enter your withdrawal number and the amount you want to withdraw. The minimum withdrawal amount is 5,000 and the maximum is 200,000.
+        </p>
 
-      <div className="mb-4">
-        <label htmlFor="withdrawNumber" className="block text-sm font-medium text-gray-300 mb-1">
-          Enter Withdrawal Number
-        </label>
-        <input
-         style={{color:'black', fontWeight:'bold'}}
-          type="tel"
-          id="withdrawNumber"
-          value={withdrawNumber}
-          onChange={(e) => setWithdrawNumber(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-600 rounded-md focus:outline-none focus:border-yellow-500"
-          placeholder="Withdrawal Number"
-          inputMode="numeric" // Makes sure the numeric keypad is shown on mobile devices
-          maxLength={10} // Limits the input to 10 digits
-        />
+        <div className="mb-4">
+          <label htmlFor="withdrawNumber" className="block text-sm font-medium text-gray-300 mb-1">
+            Enter Withdrawal Number
+          </label>
+          <input
+            style={{ color: 'black', fontWeight: 'bold' }}
+            type="tel"
+            id="withdrawNumber"
+            value={withdrawNumber}
+            onChange={(e) => setWithdrawNumber(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-600 rounded-md focus:outline-none focus:border-yellow-500"
+            placeholder="Withdrawal Number"
+            inputMode="numeric"
+            maxLength={10}
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="withdrawAmount" className="block text-sm font-medium text-gray-300 mb-1">
+            Enter Amount to Withdraw
+          </label>
+          <input
+            style={{ color: 'black', fontWeight: 'bold' }}
+            type="number"
+            id="withdrawAmount"
+            value={withdrawAmount}
+            onChange={(e) => setWithdrawAmount(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-600 rounded-md focus:outline-none focus:border-yellow-500"
+            placeholder="Amount"
+            min={12000}
+            max={200000}
+          />
+        </div>
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <div className="flex justify-between mt-6">
+          <button
+            className="bg-gray-700 text-gray-300 font-semibold py-2 px-4 rounded-md"
+            onClick={() => {
+              setWithdrawNumber('');
+              setWithdrawAmount('');
+              setError('');
+            }}
+          >
+            Clear
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600"
+            disabled={loading}
+          >
+            {loading ? <Spinner /> : 'Submit'}
+          </button>
+        </div>
+
+        <p className="mt-6 text-center text-gray-500 text-xs">
+          Your balance: {balance !== null ? `UGX ${balance.toLocaleString()}` : 'Loading...'}
+        </p>
       </div>
-
-      <div className="mb-4">
-        <label htmlFor="withdrawAmount" className="block text-sm font-medium text-gray-300 mb-1">
-          Enter Amount to Withdraw
-        </label>
-        <input
-         style={{color:'black', fontWeight:'bold'}}
-          type="number"
-          id="withdrawAmount"
-          value={withdrawAmount}
-          onChange={(e) => setWithdrawAmount(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-600 rounded-md focus:outline-none focus:border-yellow-500"
-          placeholder="Amount"
-          min={12000} // Enforce minimum withdrawal amount
-          max={200000} // Enforce maximum withdrawal amount
-        />
-      </div>
-
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-
-      <div className="flex justify-between mt-6">
-        <button
-          className="bg-gray-700 text-gray-300 font-semibold py-2 px-4 rounded-md"
-          onClick={() => {
-            setWithdrawNumber('');
-            setWithdrawAmount('');
-            setError('');
-          }}
-        >
-          Clear
-        </button>
-        <button
-          onClick={handleSubmit}
-          className="bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600"
-          disabled={loading}  // Disable the button while loading
-        >
-          {loading ? <Spinner /> : 'Submit'}
-        </button>
-      </div>
-
-      <p className="mt-6 text-center text-gray-500 text-xs">
-        Your balance: {balance ? balance : 'Loading...'}
-      </p>
-    </div>
-    <SocialBar/>
-    <BottomNav/>
+      <SocialBar />
+      <BottomNav />
     </>
   );
 };

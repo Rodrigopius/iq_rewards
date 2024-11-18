@@ -188,14 +188,7 @@ const Login: React.FC = () => {
                 {loading ? <Spinner /> : 'Login'}
               </button>
 
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                className="w-full h-12 bg-white text-blue-700 rounded-lg font-medium flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-                disabled={loading}
-              >
-                {loading ? <Spinner /> : 'Sign in with Google'}
-              </button>
+             
 
               <div className="text-center text-white text-sm">
                 Not a member? <Link to="/signup">Sign Up</Link>

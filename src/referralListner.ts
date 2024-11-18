@@ -28,7 +28,7 @@ export const listenForReferralVerification = (
   
           if (referrerDocSnap.exists()) {
             const referrerData = referrerDocSnap.data();
-            const newReferralBalance = referrerData?.referralBalance ? referrerData.referralBalance + 4000 : 4000;
+            const newReferralBalance = referrerData?.referralBalance ? referrerData.referralBalance + 500 : 500;
   
             console.log(`Updated referral balance: ${newReferralBalance}`);
   

@@ -86,7 +86,7 @@ const QuizScreen: React.FC = () => {
 
   const handleNextQuestion = () => {
     if (userAnswer === questions[currentQuestionIndex].correct_answer) {
-      setScore((prev) => prev + 10);
+      setScore((prev) => prev + 3);
       setCorrectAnswers((prev) => prev + 1);
       Swal.fire('Correct!', 'You got it right!', 'success');
     } else {
@@ -155,7 +155,7 @@ const QuizScreen: React.FC = () => {
               <span className="font-bold text-indigo-300">{questions.length}</span> questions correctly.
             </p>
             <p className="text-lg text-center mb-6">
-              Your final score is: <span className="font-bold text-indigo-300">{score}</span> / {questions.length}
+              Your final score is: <span className="font-bold text-indigo-300">{score}</span> / 15
             </p>
             <p className="text-lg text-center mb-6">
               Total Score: <span className="font-bold text-indigo-300">{totalScore}</span>

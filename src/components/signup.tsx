@@ -255,13 +255,7 @@ const Signup: React.FC = () => {
                 {loading ? <Spinner /> : 'Sign Up'}
               </button>
 
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                className="w-full h-12 flex items-center justify-center bg-white text-blue-700 rounded-lg font-medium"
-              >
-                {loading ? <Spinner /> : 'Sign Up with Google'}
-              </button>
+              
             </div>
           </form>
           <div className="text-center mt-6">
